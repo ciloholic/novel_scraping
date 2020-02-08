@@ -1,0 +1,4 @@
+require: rubocop-performance
+
+Layout/LineLength:
+  Enabled: false
