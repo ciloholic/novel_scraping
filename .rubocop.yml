@@ -15,5 +15,8 @@ Style/HashTransformKeys:
 Style/HashTransformValues:
   Enabled: true
 
+Metrics/AbcSize:
+  Enabled: false
+
 Metrics/MethodLength:
   Enabled: false
