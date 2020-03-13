@@ -10,18 +10,6 @@ Add this line to your application's Gemfile:
 gem 'novel_scraping'
 ```
 
-And then execute:
-
-```
-$ bundle install
-```
-
-Or install it yourself as:
-
-```
-$ gem install novel_scraping
-```
-
 ## Usage
 
 WIP

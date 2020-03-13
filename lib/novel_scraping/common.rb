@@ -20,5 +20,15 @@ module NovelScraping
       random_sleep
       Kernel.open(url, options)
     end
+
+    def module_name
+      {
+        'www.mai-net.net' => 'Arcadia',
+        'ncode.syosetu.com' => 'Narou',
+        'syosetu.org' => 'Hameln',
+        'www.akatsuki-novels.com' => 'Akatsuki',
+        'novel18.syosetu.com' => 'Nocturne'
+      }
+    end
   end
 end
