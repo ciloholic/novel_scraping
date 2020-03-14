@@ -4,6 +4,7 @@ PATH
     novel_scraping (0.1.0)
       activesupport (~> 6.0)
       nokogiri (~> 1.10)
+      rack (~> 2.2)
 
 GEM
   remote: https://rubygems.org/
@@ -27,6 +28,7 @@ GEM
     parallel (1.19.1)
     parser (2.7.0.4)
       ast (~> 2.4.0)
+    rack (2.2.2)
     rainbow (3.0.0)
     rake (12.3.3)
     rexml (3.2.4)
