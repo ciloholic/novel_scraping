@@ -9,9 +9,13 @@ require 'novel_scraping/nocturne'
 
 module NovelScraping
   class << self
-    def access(url)
+    def access(url, from: nil)
       host = URI.parse(url).host
       main_title, chapters = NovelScraping.const_get(module_name[host]).get_site(url)
+      if from
+        from = Time.parse(from)
+        chapters = chapters.select { |chapter| from <= Time.parse(chapter[:edit_at]) }
+      end
       chapters.each do |chapter|
         chapter[:content] = NovelScraping.const_get(module_name[host]).get_chapter(chapter[:url])
       end
