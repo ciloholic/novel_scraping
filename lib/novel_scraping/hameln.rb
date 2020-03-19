@@ -52,7 +52,7 @@ module NovelScraping
       def datetime(string)
         return nil if string.blank?
 
-        Time.strptime(string, '%Y年%m月%d日 %H:%M').strftime('%Y/%m/%d %H:%M:%S')
+        Time.strptime(string, '%Y年%m月%d日 %H:%M')
       end
     end
   end

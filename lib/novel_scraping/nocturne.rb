@@ -50,8 +50,7 @@ module NovelScraping
       def datetime(string)
         return nil if string.blank?
 
-        datetime = string.match('(\d{4}/\d{2}/\d{2} \d{2}:\d{2})')[1]
-        Time.parse(datetime).strftime('%Y/%m/%d %H:%M:%S')
+        Time.parse(string.match('(\d{4}/\d{2}/\d{2} \d{2}:\d{2})')[1])
       end
     end
   end

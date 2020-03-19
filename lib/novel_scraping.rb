@@ -13,8 +13,8 @@ module NovelScraping
       host = URI.parse(url).host
       main_title, chapters = NovelScraping.const_get(module_name[host]).get_site(url)
       if from
-        from = Time.parse(from)
-        chapters = chapters.select { |chapter| from <= Time.parse(chapter[:edit_at]) }
+        from = Time.parse(from) if from.instance_of?(String)
+        chapters = chapters.select { |chapter| from <= chapter[:edit_at] }
       end
       chapters.each do |chapter|
         chapter[:content] = NovelScraping.const_get(module_name[host]).get_chapter(chapter[:url])
