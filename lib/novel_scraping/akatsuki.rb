@@ -46,7 +46,7 @@ module NovelScraping
 
       private
 
-      def datetime(string)
+      def datetime(string = nil)
         return nil if string.blank?
 
         Time.strptime(string, '%Y年%m月%d日%H時%M分')
