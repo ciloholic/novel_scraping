@@ -4,7 +4,7 @@ novel scraping is a gem that scrapes fan fiction novel sites.
 
 ## Status
 
-https://github.com/ciloholic/novel_scraping/workflows/rspec/badge.svg
+![](https://github.com/ciloholic/novel_scraping/workflows/Rspec/badge.svg)
 
 ## Installation
 
