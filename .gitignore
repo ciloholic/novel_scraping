@@ -7,5 +7,5 @@
 /spec/reports/
 /tmp/
 /vendor
+Gemfile.lock
 .rspec_status
-.Gemfile.lock
