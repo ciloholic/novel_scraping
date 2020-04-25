@@ -3,8 +3,20 @@ require: rubocop-performance
 Layout/LineLength:
   Enabled: false
 
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
 Style/Documentation:
   Enabled: false
+
+Style/ExponentialNotation:
+  Enabled: true
 
 Style/HashEachMethods:
   Enabled: true

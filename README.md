@@ -11,12 +11,37 @@ https://github.com/ciloholic/novel_scraping/workflows/rspec/badge.svg
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'novel_scraping'
+gem 'novel_scraping', git: 'https://github.com/ciloholic/novel_scraping.git'
 ```
 
 ## Usage
 
-WIP
+```
+# Scraping all the information for the novel title and each chapter
+url = 'https://hogehoge/000000'
+title, chapters = NovelScraping.access(url)
+
+# title
+=> 'novel title'
+
+# chapters
+=>
+[
+  {
+    url: 'https://hogehoge/000000/1',
+    sub_title: 'sub title',
+    post_at: 2020-01-01 00:00:00 +0900,
+    edit_at: 2020-01-01 00:00:00 +0900,
+    count: 1,
+    content: 'content'
+  }
+]
+```
+
+```
+# Use `from` option to scrap chapters after the post date
+title, chapters = NovelScraping.access(url, from: '2020-01-01 00:00:00')
+```
 
 ## Development
 
