@@ -105,7 +105,7 @@ RSpec.describe NovelScraping do
   context 'hameln group' do
     it 'NovelScraping::Hameln.get_site test' do
       url = 'https://syosetu.org/novel/000000/'
-      allow(NovelScraping).to receive(:kernel_open).and_return(@hameln[:html_top]).with(url)
+      allow(NovelScraping).to receive(:kernel_open).and_return(@hameln[:html_top]).with(url, { 'Cookie' => 'over18=off' })
       main_title, chapters = NovelScraping::Hameln.get_site(url)
       expect(main_title).to eq @hameln[:main_title]
       expect(chapters).to eq @hameln[:chapters]
@@ -113,7 +113,7 @@ RSpec.describe NovelScraping do
 
     it 'NovelScraping::Hameln.get_chapter test' do
       url = 'https://syosetu.org/novel/000000/1.html'
-      allow(NovelScraping).to receive(:kernel_open).and_return(@hameln[:html_chapter_1]).with(url)
+      allow(NovelScraping).to receive(:kernel_open).and_return(@hameln[:html_chapter_1]).with(url, { 'Cookie' => 'over18=off' })
       content = NovelScraping::Hameln.get_chapter(url)
       expect(content).to eq 'hameln chapter-1 content'
     end
