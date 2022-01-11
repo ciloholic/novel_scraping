@@ -2,21 +2,21 @@ name: Gem
 
 on:
   push:
-    branches: [ master, development ]
+    branches: [ main, development ]
   pull_request:
-    branches: [ master, development ]
+    branches: [ main, development ]
 
 jobs:
   rubocop-rspec:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set up Ruby 2.6.6
+    - name: Set up Ruby 3.1.0
       uses: actions/setup-ruby@v1
       with:
-        ruby-version: 2.6.6
+        ruby-version: 3.1.0
 
     - name: Cache vendor/bundle
       uses: actions/cache@v1

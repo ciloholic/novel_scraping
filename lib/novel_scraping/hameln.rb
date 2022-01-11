@@ -34,7 +34,7 @@ module NovelScraping
           chapters << {
             url: chapter_link.to_s,
             sub_title: chapter.xpath(XML_SUB_TITLE).text,
-            post_at: post_at,
+            post_at:,
             edit_at: edit_at.present? ? edit_at : post_at,
             count: chapter_link.to_s.split('/').last.to_i
           }
