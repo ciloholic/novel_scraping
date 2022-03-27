@@ -8,3 +8,4 @@
 /bin/gem_run
 Gemfile.lock
 .rspec_status
+.envrc

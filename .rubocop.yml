@@ -48,3 +48,4 @@ Metrics/MethodLength:
 
 AllCops:
   NewCops: enable
+  TargetRubyVersion: 3.1

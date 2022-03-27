@@ -16,11 +16,11 @@ module NovelScraping
       sleep([*min..max].sample)
     end
 
-    def kernel_open(url, option = nil)
+    def uri_open(url, option = nil)
       options = { 'User-Agent' => user_agent }
       options.merge!(option) unless option.nil?
       random_sleep
-      Kernel.open(url, options)
+      URI.open(url, options) # rubocop:disable Security/Open
     end
 
     def module_name

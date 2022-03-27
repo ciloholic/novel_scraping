@@ -20,7 +20,7 @@ module NovelScraping
 
     class << self
       def get_site(url)
-        html = Nokogiri::HTML(NovelScraping.kernel_open(url))
+        html = Nokogiri::HTML(NovelScraping.uri_open(url))
         main_title = html.xpath(XML_MAIN_TITLE).text
         chapters = []
         html.xpath(XML_CHAPTER_LIST).each do |chapter|
@@ -40,7 +40,7 @@ module NovelScraping
       end
 
       def get_chapter(url)
-        html = Nokogiri::HTML(NovelScraping.kernel_open(url))
+        html = Nokogiri::HTML(NovelScraping.uri_open(url))
         html.xpath(XML_CONTENT).inner_html.gsub(/[\r\n]/, '')
       end
 

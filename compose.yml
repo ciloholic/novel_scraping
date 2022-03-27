@@ -1,0 +1,21 @@
+x-ruby-args: &ruby-args
+  BUNDLER_VERSION_ARG: $BUNDLER_VERSION
+  RUBY_VERSION_ARG: $RUBY_VERSION
+
+services:
+  ruby:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        <<: *ruby-args
+    volumes:
+      - ./:/app:cached
+      - bundle:/bundle:cached
+      - bundle_cache:/app/tmp/cache:cached
+      - rubocop_cache:/root/.cache/rubocop_cache:cached
+    tty: true
+volumes:
+  bundle:
+  bundle_cache:
+  rubocop_cache:
