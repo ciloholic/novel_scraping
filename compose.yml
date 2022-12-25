@@ -6,7 +6,6 @@ services:
   ruby:
     build:
       context: .
-      dockerfile: Dockerfile
       args:
         <<: *ruby-args
     volumes:
@@ -15,6 +14,7 @@ services:
       - bundle_cache:/app/tmp/cache:cached
       - rubocop_cache:/root/.cache/rubocop_cache:cached
     tty: true
+
 volumes:
   bundle:
   bundle_cache:
