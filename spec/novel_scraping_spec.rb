@@ -3,8 +3,8 @@
 require 'spec_helper'
 
 RSpec.describe NovelScraping do
-  before do
-    @arcadia = {
+  let!(:arcadia) do
+    {
       html_top: File.read('./spec/fixtures/arcadia/arcadia.html'),
       html_chapter1: File.read('./spec/fixtures/arcadia/arcadia_1.html'),
       main_title: 'arcadia title',
@@ -14,7 +14,9 @@ RSpec.describe NovelScraping do
         { url: 'http://www.mai-net.net/bbs/sst/sst.php?act=dump&cate=akamatu&all=00000&n=2#kiji', sub_title: 'chapter-2', post_at: Time.parse('2020-01-03 00:00:00'), edit_at: Time.parse('2020-01-03 00:00:00'), count: 2 }
       ]
     }
-    @narou = {
+  end
+  let!(:narou) do
+    {
       html_top: File.read('./spec/fixtures/narou/narou.html'),
       html_chapter1: File.read('./spec/fixtures/narou/narou_1.html'),
       main_title: 'narou title',
@@ -24,7 +26,9 @@ RSpec.describe NovelScraping do
         { url: 'https://ncode.syosetu.com/n000000/3/', sub_title: 'chapter-3', post_at: Time.parse('2020-01-03 00:00:00'), edit_at: Time.parse('2020-01-03 00:00:00'), count: 3 }
       ]
     }
-    @hameln = {
+  end
+  let!(:hameln) do
+    {
       html_top: File.read('./spec/fixtures/hameln/hameln.html'),
       html_chapter1: File.read('./spec/fixtures/hameln/hameln_1.html'),
       main_title: 'hameln title',
@@ -34,7 +38,9 @@ RSpec.describe NovelScraping do
         { url: 'https://syosetu.org/novel/000000/3.html', sub_title: 'chapter-3', post_at: Time.parse('2020-01-03 00:00:00'), edit_at: Time.parse('2020-01-03 00:00:00'), count: 3 }
       ]
     }
-    @akatsuki = {
+  end
+  let!(:akatsuki) do
+    {
       html_top: File.read('./spec/fixtures/akatsuki/akatsuki.html'),
       html_chapter1: File.read('./spec/fixtures/akatsuki/akatsuki_1.html'),
       main_title: 'akatsuki title',
@@ -44,7 +50,9 @@ RSpec.describe NovelScraping do
         { url: 'https://www.akatsuki-novels.com/stories/view/3/novel_id~000000', sub_title: 'chapter-3', post_at: Time.parse('2020-01-03 00:00:00'), edit_at: Time.parse('2020-01-03 00:00:00'), count: 3 }
       ]
     }
-    @nocturne = {
+  end
+  let!(:nocturne) do
+    {
       html_top: File.read('./spec/fixtures/nocturne/nocturne.html'),
       html_chapter1: File.read('./spec/fixtures/nocturne/nocturne_1.html'),
       main_title: 'nocturne title',
@@ -59,15 +67,15 @@ RSpec.describe NovelScraping do
   context 'arcadia group' do
     it 'NovelScraping::Arcadia.get_site test' do
       url = 'http://www.mai-net.net/bbs/sst/sst.php?act=dump&cate=akamatu&all=00000&n=0#kiji'
-      allow(NovelScraping).to receive(:uri_open).and_return(@arcadia[:html_top]).with(url)
+      allow(described_class).to receive(:uri_open).and_return(arcadia[:html_top]).with(url)
       main_title, chapters = NovelScraping::Arcadia.get_site(url)
-      expect(main_title).to eq @arcadia[:main_title]
-      expect(chapters).to eq @arcadia[:chapters]
+      expect(main_title).to eq arcadia[:main_title]
+      expect(chapters).to eq arcadia[:chapters]
     end
 
     it 'NovelScraping::Arcadia.get_chapter test' do
       url = 'http://www.mai-net.net/bbs/sst/sst.php?act=dump&cate=akamatu&all=00000&n=1#kiji'
-      allow(NovelScraping).to receive(:uri_open).and_return(@arcadia[:html_chapter1]).with(url)
+      allow(described_class).to receive(:uri_open).and_return(arcadia[:html_chapter1]).with(url)
       content = NovelScraping::Arcadia.get_chapter(url)
       expect(content).to eq 'arcadia chapter-1 content'
     end
@@ -82,15 +90,15 @@ RSpec.describe NovelScraping do
   context 'narou group' do
     it 'NovelScraping::Narou.get_site test' do
       url = 'https://ncode.syosetu.com/n000000/'
-      allow(NovelScraping).to receive(:uri_open).and_return(@narou[:html_top]).with(url)
+      allow(described_class).to receive(:uri_open).and_return(narou[:html_top]).with(url)
       main_title, chapters = NovelScraping::Narou.get_site(url)
-      expect(main_title).to eq @narou[:main_title]
-      expect(chapters).to eq @narou[:chapters]
+      expect(main_title).to eq narou[:main_title]
+      expect(chapters).to eq narou[:chapters]
     end
 
     it 'NovelScraping::Narou.get_chapter test' do
       url = 'https://ncode.syosetu.com/n000000/1/'
-      allow(NovelScraping).to receive(:uri_open).and_return(@narou[:html_chapter1]).with(url)
+      allow(described_class).to receive(:uri_open).and_return(narou[:html_chapter1]).with(url)
       content = NovelScraping::Narou.get_chapter(url)
       expect(content).to eq 'narou chapter-1 content'
     end
@@ -105,15 +113,15 @@ RSpec.describe NovelScraping do
   context 'hameln group' do
     it 'NovelScraping::Hameln.get_site test' do
       url = 'https://syosetu.org/novel/000000/'
-      allow(NovelScraping).to receive(:uri_open).and_return(@hameln[:html_top]).with(url, { 'Cookie' => 'over18=off' })
+      allow(described_class).to receive(:uri_open).and_return(hameln[:html_top]).with(url, { 'Cookie' => 'over18=off' })
       main_title, chapters = NovelScraping::Hameln.get_site(url)
-      expect(main_title).to eq @hameln[:main_title]
-      expect(chapters).to eq @hameln[:chapters]
+      expect(main_title).to eq hameln[:main_title]
+      expect(chapters).to eq hameln[:chapters]
     end
 
     it 'NovelScraping::Hameln.get_chapter test' do
       url = 'https://syosetu.org/novel/000000/1.html'
-      allow(NovelScraping).to receive(:uri_open).and_return(@hameln[:html_chapter1]).with(url, { 'Cookie' => 'over18=off' })
+      allow(described_class).to receive(:uri_open).and_return(hameln[:html_chapter1]).with(url, { 'Cookie' => 'over18=off' })
       content = NovelScraping::Hameln.get_chapter(url)
       expect(content).to eq 'hameln chapter-1 content'
     end
@@ -128,15 +136,15 @@ RSpec.describe NovelScraping do
   context 'akatsuki group' do
     it 'NovelScraping::Akatsuki.get_site test' do
       url = 'https://www.akatsuki-novels.com/stories/index/novel_id~000000'
-      allow(NovelScraping).to receive(:uri_open).and_return(@akatsuki[:html_top]).with(url)
+      allow(described_class).to receive(:uri_open).and_return(akatsuki[:html_top]).with(url)
       main_title, chapters = NovelScraping::Akatsuki.get_site(url)
-      expect(main_title).to eq @akatsuki[:main_title]
-      expect(chapters).to eq @akatsuki[:chapters]
+      expect(main_title).to eq akatsuki[:main_title]
+      expect(chapters).to eq akatsuki[:chapters]
     end
 
     it 'NovelScraping::Akatsuki.get_chapter test' do
       url = 'https://www.akatsuki-novels.com/stories/view/1/novel_id~000000'
-      allow(NovelScraping).to receive(:uri_open).and_return(@akatsuki[:html_chapter1]).with(url)
+      allow(described_class).to receive(:uri_open).and_return(akatsuki[:html_chapter1]).with(url)
       content = NovelScraping::Akatsuki.get_chapter(url)
       expect(content).to eq 'akatsuki chapter-1 content'
     end
@@ -151,15 +159,15 @@ RSpec.describe NovelScraping do
   context 'nocturne group' do
     it 'NovelScraping::Nocturne.get_site test' do
       url = 'https://novel18.syosetu.com/n000000/'
-      allow(NovelScraping).to receive(:uri_open).and_return(@nocturne[:html_top]).with(url, { 'Cookie' => 'over18=yes' })
+      allow(described_class).to receive(:uri_open).and_return(nocturne[:html_top]).with(url, { 'Cookie' => 'over18=yes' })
       main_title, chapters = NovelScraping::Nocturne.get_site(url)
-      expect(main_title).to eq @nocturne[:main_title]
-      expect(chapters).to eq @nocturne[:chapters]
+      expect(main_title).to eq nocturne[:main_title]
+      expect(chapters).to eq nocturne[:chapters]
     end
 
     it 'NovelScraping::Nocturne.get_chapter test' do
       url = 'https://novel18.syosetu.com/n000000/1/'
-      allow(NovelScraping).to receive(:uri_open).and_return(@nocturne[:html_chapter1]).with(url, { 'Cookie' => 'over18=yes' })
+      allow(described_class).to receive(:uri_open).and_return(nocturne[:html_chapter1]).with(url, { 'Cookie' => 'over18=yes' })
       content = NovelScraping::Nocturne.get_chapter(url)
       expect(content).to eq 'nocturne chapter-1 content'
     end
