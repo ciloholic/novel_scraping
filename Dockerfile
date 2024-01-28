@@ -21,4 +21,5 @@ ENV BUNDLE_APP_CONFIG=$BUNDLE_PATH \
     BUNDLE_BIN=$BUNDLE_PATH/bin
 ENV PATH $BUNDLE_BIN:$PATH
 RUN gem update --system && \
-    gem install --no-document bundler -v $BUNDLER_VERSION_ARG
+    gem install --no-document bundler -v $BUNDLER_VERSION_ARG && \
+    bundle config set force_ruby_platform true
