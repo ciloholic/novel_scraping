@@ -24,7 +24,7 @@ downv: ## コンテナとボリューム、ネットワークを破棄
 restart: ## コンテナを再起動
 	docker compose restart
 rubocop: ## Rubocopを実行
-	docker compose exec ruby bundle exec rubocop -A
+	docker compose exec ruby bundle exec rubocop -a
 rspec: ## Rspecを実行
 	docker compose exec ruby bundle exec rspec
 login: ## Rubyコンテナへログイン

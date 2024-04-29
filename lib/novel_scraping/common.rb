@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'faraday'
+
 module NovelScraping
   class << self
     def user_agent
@@ -18,11 +20,13 @@ module NovelScraping
       sleep([*min..max].sample)
     end
 
-    def uri_open(url, option = nil)
-      options = { 'User-Agent' => user_agent }
-      options.merge!(option) unless option.nil?
+    def uri_open(url, option = {})
       random_sleep
-      URI.open(url.delete_suffix('/'), options) # rubocop:disable Security/Open
+      res = Faraday.get(url) do |req|
+        req.headers['User-Agent'] = user_agent
+        req.headers['Cookie'] = option[:cookie] if option.key?(:cookie)
+      end
+      res.body
     end
 
     def module_name

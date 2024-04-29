@@ -21,7 +21,7 @@ module NovelScraping
 
     class << self
       def get_site(url)
-        top_html = Nokogiri::HTML(NovelScraping.uri_open(url, { 'Cookie' => 'over18=yes' }))
+        top_html = Nokogiri::HTML(NovelScraping.uri_open(url, { cookie: 'over18=yes' }))
         main_title = top_html.xpath(XML_MAIN_TITLE).text
 
         htmls = [top_html].tap do |html|
@@ -29,7 +29,7 @@ module NovelScraping
           if path.present?
             last_page = URI.decode_www_form(URI.parse(path).query).to_h['p'].to_i
             [*2..last_page].each do |page|
-              html << Nokogiri::HTML(NovelScraping.uri_open("#{url}/?p=#{page}", { 'Cookie' => 'over18=yes' }))
+              html << Nokogiri::HTML(NovelScraping.uri_open("#{url}/?p=#{page}", { cookie: 'over18=yes' }))
             end
           end
         end
@@ -56,7 +56,7 @@ module NovelScraping
       end
 
       def get_chapter(url)
-        html = Nokogiri::HTML(NovelScraping.uri_open(url, { 'Cookie' => 'over18=yes' }))
+        html = Nokogiri::HTML(NovelScraping.uri_open(url, { cookie: 'over18=yes' }))
         html.xpath(XML_CONTENT).inner_html.gsub(/[\r\n]/, '')
       end
 
