@@ -21,17 +21,19 @@ module NovelScraping
     class << self
       def get_site(url)
         html = Nokogiri::HTML(NovelScraping.uri_open(url))
-        main_title = html.xpath(XML_MAIN_TITLE).text
+        main_title = html.xpath(XML_MAIN_TITLE).text.strip
+
         chapters = []
         html.xpath(XML_CHAPTER_LIST).each do |chapter|
-          next if chapter.xpath(XML_SUB_TITLE).text.empty?
+          sub_title = chapter.xpath(XML_SUB_TITLE).text.strip
+          next if sub_title.empty?
 
           chapter_link = URI.join(url, chapter.xpath(XML_CHAPTER_LINK).text)
           post_at = datetime(chapter.xpath(XML_POST_AT).text.gsub(/[()]/, ''))
           edit_at = datetime(chapter.xpath(XML_EDIT_AT).text.gsub(/[()]/, ''))
           chapters << {
             url: chapter_link.to_s,
-            sub_title: chapter.xpath(XML_SUB_TITLE).text,
+            sub_title:,
             post_at:,
             edit_at: edit_at.present? ? edit_at : post_at,
             count: Rack::Utils.parse_nested_query(chapter_link.query)['n'].to_i

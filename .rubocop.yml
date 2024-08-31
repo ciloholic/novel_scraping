@@ -65,3 +65,5 @@ RSpec/MultipleExpectations:
 AllCops:
   NewCops: enable
   TargetRubyVersion: 3.3
+  Exclude:
+    - 'bin/gem_run'
