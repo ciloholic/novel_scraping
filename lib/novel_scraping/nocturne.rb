@@ -10,14 +10,14 @@ require 'novel_scraping/common'
 
 module NovelScraping
   module Nocturne
-    XML_MAIN_TITLE = '//*[@id="novel_color"]/p[@class="novel_title"]'
-    XML_SUB_TITLE = 'dd[@class="subtitle"]/a'
-    XML_PAGINATION = '//*[@class="novelview_pager-last"]/@href'
-    XML_CHAPTER_LIST = '//*[@id="novel_color"]/div[@class="index_box"]/dl[@class="novel_sublist2"]'
-    XML_CHAPTER_LINK = 'dd[@class="subtitle"]/a/@href'
-    XML_POST_AT = 'dt[@class="long_update"]/text()'
-    XML_EDIT_AT = 'dt[@class="long_update"]/span/@title'
-    XML_CONTENT = '//*[@id="novel_honbun"]'
+    XML_MAIN_TITLE = '//article[@class="p-novel"]/h1[@class="p-novel__title"]'
+    XML_SUB_TITLE = 'a[@class="p-eplist__subtitle"]/text()'
+    XML_PAGINATION = '//a[@class="c-pager__item c-pager__item--last"]/@href'
+    XML_CHAPTER_LIST = '//div[@class="p-eplist__sublist"]'
+    XML_CHAPTER_LINK = 'a/@href'
+    XML_POST_AT = 'div[@class="p-eplist__update"]/text()'
+    XML_EDIT_AT = 'div[@class="p-eplist__update"]/span/@title'
+    XML_CONTENT = '//div[@class="p-novel__body"]'
 
     class << self
       def get_site(url)

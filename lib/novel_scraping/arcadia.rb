@@ -39,6 +39,7 @@ module NovelScraping
             count: Rack::Utils.parse_nested_query(chapter_link.query)['n'].to_i
           }
         end
+
         [main_title, chapters]
       end
 
