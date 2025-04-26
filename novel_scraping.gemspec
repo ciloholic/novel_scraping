@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description   = ''
   spec.homepage      = 'https://github.com/ciloholic'
   spec.license       = 'MIT'
-  spec.required_ruby_version = Gem::Requirement.new('>= 3.3')
+  spec.required_ruby_version = Gem::Requirement.new('>= 3.4')
 
   spec.metadata['allowed_push_host'] = "TODO: Set to 'http://mygemserver.com'"
   spec.metadata['homepage_uri'] = spec.homepage
