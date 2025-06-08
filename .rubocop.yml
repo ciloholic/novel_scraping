@@ -67,3 +67,4 @@ AllCops:
   TargetRubyVersion: 3.4
   Exclude:
     - 'bin/gem_run'
+    - 'vendor/bundle/**/*'
