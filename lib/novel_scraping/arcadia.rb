@@ -2,7 +2,6 @@
 
 require 'nokogiri'
 require 'uri'
-require 'open-uri'
 require 'rack'
 require 'active_support'
 require 'active_support/time'
@@ -36,7 +35,7 @@ module NovelScraping
             sub_title:,
             post_at:,
             edit_at: edit_at.present? ? edit_at : post_at,
-            count: Rack::Utils.parse_nested_query(chapter_link.query)['n'].to_i
+            count: Rack::Utils.parse_nested_query(chapter_link.query.to_s)['n'].to_i
           }
         end
 
@@ -53,7 +52,14 @@ module NovelScraping
       def datetime(string = nil)
         return nil if string.blank?
 
-        Time.parse(string.match('(\d{4}/\d{2}/\d{2} \d{2}:\d{2})')[1])
+        matched_date = string.match('(\d{4}/\d{2}/\d{2} \d{2}:\d{2})')
+        return nil unless matched_date && matched_date[1]
+
+        begin
+          Time.parse(matched_date[1])
+        rescue ArgumentError
+          nil
+        end
       end
     end
   end

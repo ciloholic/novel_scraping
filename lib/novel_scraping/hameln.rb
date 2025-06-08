@@ -55,7 +55,11 @@ module NovelScraping
       def datetime(string = nil)
         return nil if string.blank?
 
-        Time.strptime(string, '%Y年%m月%d日 %H:%M')
+        begin
+          Time.strptime(string, '%Y年%m月%d日 %H:%M')
+        rescue ArgumentError
+          nil
+        end
       end
     end
   end

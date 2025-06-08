@@ -2,8 +2,6 @@
 
 require 'nokogiri'
 require 'uri'
-require 'open-uri'
-require 'rack'
 require 'active_support'
 require 'active_support/time'
 require 'novel_scraping/common'
@@ -66,7 +64,14 @@ module NovelScraping
       def datetime(string = nil)
         return nil if string.blank?
 
-        Time.parse(string.match('(\d{4}/\d{2}/\d{2} \d{2}:\d{2})')[1])
+        match_data = string.match('(\d{4}/\d{2}/\d{2} \d{2}:\d{2})')
+        return nil unless match_data && match_data[1]
+
+        begin
+          Time.parse(match_data[1])
+        rescue ArgumentError
+          nil
+        end
       end
     end
   end

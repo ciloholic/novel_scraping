@@ -2,8 +2,6 @@
 
 require 'nokogiri'
 require 'uri'
-require 'open-uri'
-require 'rack'
 require 'active_support'
 require 'active_support/time'
 require 'novel_scraping/common'
@@ -35,7 +33,7 @@ module NovelScraping
             sub_title:,
             post_at:,
             edit_at: post_at,
-            count: chapter_link.to_s.split('/').last(2).first.to_i
+            count: chapter_link.to_s.match(%r{/stories/view/(\d+)})&.captures&.first.to_i
           }
         end
 
@@ -52,7 +50,11 @@ module NovelScraping
       def datetime(string = nil)
         return nil if string.blank?
 
-        Time.strptime(string, '%Y年%m月%d日%H時%M分')
+        begin
+          Time.strptime(string, '%Y年%m月%d日%H時%M分')
+        rescue ArgumentError
+          nil
+        end
       end
     end
   end
