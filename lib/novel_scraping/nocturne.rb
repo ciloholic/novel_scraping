@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-require 'nokogiri'
-require 'uri'
 require 'active_support'
 require 'active_support/time'
+require 'faker'
+require 'nokogiri'
 require 'novel_scraping/common'
+require 'uri'
 
 module NovelScraping
   module Nocturne

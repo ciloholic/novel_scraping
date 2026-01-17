@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description   = ''
   spec.homepage      = 'https://github.com/ciloholic'
   spec.license       = 'MIT'
-  spec.required_ruby_version = Gem::Requirement.new('>= 3.4')
+  spec.required_ruby_version = Gem::Requirement.new('>= 4.0')
 
   spec.metadata['allowed_push_host'] = "TODO: Set to 'http://mygemserver.com'"
   spec.metadata['homepage_uri'] = spec.homepage
@@ -29,6 +29,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'activesupport'
   spec.add_dependency 'faraday'
+  spec.add_dependency 'irb'
   spec.add_dependency 'nokogiri'
   spec.add_dependency 'rack'
 end

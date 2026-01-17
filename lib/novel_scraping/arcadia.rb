@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
-require 'nokogiri'
-require 'uri'
-require 'rack'
 require 'active_support'
 require 'active_support/time'
+require 'faker'
+require 'nokogiri'
 require 'novel_scraping/common'
+require 'rack'
+require 'uri'
 
 module NovelScraping
   module Arcadia

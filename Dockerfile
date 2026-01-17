@@ -1,10 +1,10 @@
 ARG RUBY_VERSION_ARG
 
-FROM ruby:${RUBY_VERSION_ARG:-3}-alpine
+FROM ruby:${RUBY_VERSION_ARG:-4}-alpine
 
 ARG BUNDLER_VERSION_ARG
 
-RUN apk add --no-cache git build-base bash less tzdata && \
+RUN apk add --no-cache bash build-base git less tzdata yaml-dev && \
     cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
 WORKDIR /app
