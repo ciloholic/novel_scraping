@@ -9,7 +9,7 @@ require 'rack'
 require 'uri'
 
 module NovelScraping
-  module Arcadia
+  class Arcadia < BaseScraper
     XML_MAIN_TITLE = '//*[@id="table"]/tr[1]/td[2]/b/a'
     XML_SUB_TITLE = 'td[2]/b/a'
     XML_CHAPTER_LIST = '//*[@id="table"]/tr'
@@ -43,24 +43,10 @@ module NovelScraping
         [main_title, chapters]
       end
 
-      def get_chapter(url)
-        html = Nokogiri::HTML(NovelScraping.uri_open(url))
-        html.xpath(XML_CONTENT).inner_html.gsub(/[\r\n]/, '')
-      end
-
       private
 
       def datetime(string = nil)
-        return nil if string.blank?
-
-        matched_date = string.match('(\d{4}/\d{2}/\d{2} \d{2}:\d{2})')
-        return nil unless matched_date && matched_date[1]
-
-        begin
-          Time.parse(matched_date[1])
-        rescue ArgumentError
-          nil
-        end
+        DateTimeParser.parse(string, :slash_format)
       end
     end
   end

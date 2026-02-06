@@ -10,7 +10,7 @@ require 'rack'
 require 'uri'
 
 module NovelScraping
-  module Hameln
+  class Hameln < BaseScraper
     XML_MAIN_TITLE = '//*[@id="maind"]/div[1]/span[1]'
     XML_SUB_TITLE = 'td[1]/a'
     XML_CHAPTER_LIST = '//*[@id="maind"]/div[3]/table/tr'
@@ -46,21 +46,14 @@ module NovelScraping
         [main_title, chapters]
       end
 
-      def get_chapter(url)
-        html = Nokogiri::HTML(NovelScraping.uri_open(url, { cookie: 'over18=off' }))
-        html.xpath(XML_CONTENT).inner_html.gsub(/[\r\n]/, '')
-      end
-
       private
 
-      def datetime(string = nil)
-        return nil if string.blank?
+      def request_options
+        { cookie: 'over18=off' }
+      end
 
-        begin
-          Time.strptime(string, '%Y年%m月%d日 %H:%M')
-        rescue ArgumentError
-          nil
-        end
+      def datetime(string = nil)
+        DateTimeParser.parse(string, :japanese_space)
       end
     end
   end

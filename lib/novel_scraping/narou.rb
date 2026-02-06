@@ -8,7 +8,7 @@ require 'novel_scraping/common'
 require 'uri'
 
 module NovelScraping
-  module Narou
+  class Narou < BaseScraper
     XML_MAIN_TITLE = '//article[@class="p-novel"]/h1[@class="p-novel__title"]'
     XML_SUB_TITLE = 'a[@class="p-eplist__subtitle"]/text()'
     XML_PAGINATION = '//a[@class="c-pager__item c-pager__item--last"]/@href'
@@ -54,24 +54,10 @@ module NovelScraping
         [main_title, chapters]
       end
 
-      def get_chapter(url)
-        html = Nokogiri::HTML(NovelScraping.uri_open(url))
-        html.xpath(XML_CONTENT).inner_html.gsub(/[\r\n]/, '')
-      end
-
       private
 
       def datetime(string = nil)
-        return nil if string.blank?
-
-        match_data = string.match('(\d{4}/\d{2}/\d{2} \d{2}:\d{2})')
-        return nil unless match_data && match_data[1]
-
-        begin
-          Time.parse(match_data[1])
-        rescue ArgumentError
-          nil
-        end
+        DateTimeParser.parse(string, :slash_format)
       end
     end
   end

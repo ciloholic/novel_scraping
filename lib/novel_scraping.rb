@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'novel_scraping/version'
+require 'novel_scraping/base_scraper'
+require 'novel_scraping/date_time_parser'
 require 'novel_scraping/arcadia'
 require 'novel_scraping/narou'
 require 'novel_scraping/hameln'

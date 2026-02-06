@@ -8,7 +8,7 @@ require 'novel_scraping/common'
 require 'uri'
 
 module NovelScraping
-  module Akatsuki
+  class Akatsuki < BaseScraper
     XML_MAIN_TITLE = '//*[@id="LookNovel"]'
     XML_SUB_TITLE = 'td[1]/a'
     XML_CHAPTER_LIST = '//table[@class="list"]/tbody/tr'
@@ -41,21 +41,10 @@ module NovelScraping
         [main_title, chapters]
       end
 
-      def get_chapter(url)
-        html = Nokogiri::HTML(NovelScraping.uri_open(url))
-        html.xpath(XML_CONTENT).inner_html.gsub(/[\r\n]/, '')
-      end
-
       private
 
       def datetime(string = nil)
-        return nil if string.blank?
-
-        begin
-          Time.strptime(string, '%Y年%m月%d日%H時%M分')
-        rescue ArgumentError
-          nil
-        end
+        DateTimeParser.parse(string, :japanese_full)
       end
     end
   end

@@ -75,7 +75,7 @@ RSpec.describe NovelScraping do
 
     it 'NovelScraping::Arcadia.get_chapter test' do
       url = 'http://www.mai-net.net/bbs/sst/sst.php?act=dump&cate=akamatu&all=00000&n=1#kiji'
-      allow(described_class).to receive(:uri_open).and_return(arcadia[:html_chapter1]).with(url)
+      allow(described_class).to receive(:uri_open).and_return(arcadia[:html_chapter1]).with(url, {})
       content = NovelScraping::Arcadia.get_chapter(url)
       expect(content).to eq 'arcadia chapter-1 content'
     end
@@ -98,7 +98,7 @@ RSpec.describe NovelScraping do
 
     it 'NovelScraping::Narou.get_chapter test' do
       url = 'https://ncode.syosetu.com/n000000/1/'
-      allow(described_class).to receive(:uri_open).and_return(narou[:html_chapter1]).with(url)
+      allow(described_class).to receive(:uri_open).and_return(narou[:html_chapter1]).with(url, {})
       content = NovelScraping::Narou.get_chapter(url)
       expect(content).to eq 'narou chapter-1 content'
     end
@@ -144,7 +144,7 @@ RSpec.describe NovelScraping do
 
     it 'NovelScraping::Akatsuki.get_chapter test' do
       url = 'https://www.akatsuki-novels.com/stories/view/1/novel_id~000000'
-      allow(described_class).to receive(:uri_open).and_return(akatsuki[:html_chapter1]).with(url)
+      allow(described_class).to receive(:uri_open).and_return(akatsuki[:html_chapter1]).with(url, {})
       content = NovelScraping::Akatsuki.get_chapter(url)
       expect(content).to eq 'akatsuki chapter-1 content'
     end
