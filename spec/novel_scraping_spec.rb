@@ -123,7 +123,7 @@ RSpec.describe NovelScraping do
       url = 'https://syosetu.org/novel/000000/1.html'
       allow(described_class).to receive(:uri_open).and_return(hameln[:html_chapter1]).with(url, { cookie: 'over18=off' })
       content = NovelScraping::Hameln.get_chapter(url)
-      expect(content).to eq 'hameln chapter-1 content'
+      expect(content).to eq '<p id="0">hameln chapter-1 content</p>'
     end
 
     it 'NovelScraping::Hameln.datetime test' do
