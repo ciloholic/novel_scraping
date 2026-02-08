@@ -1,10 +1,12 @@
 /.bundle
+/.claude
+/bin/gem_run
 /coverage
 /doc
 /pkg
 /spec/reports
 /tmp
 /vendor
-/bin/gem_run
-Gemfile.lock
+
 .rspec_status
+Gemfile.lock

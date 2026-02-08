@@ -11,16 +11,39 @@ require 'novel_scraping/nocturne'
 
 module NovelScraping
   class << self
+    attr_writer :logger, :verbose
+
+    def logger
+      @logger ||=
+        if defined?(Rails)
+          Rails.logger
+        else
+          ActiveSupport::Logger.new($stdout).tap do |log|
+            log.formatter = proc { |_severity, datetime, _progname, msg| "[#{datetime.strftime('%Y-%m-%d %H:%M:%S')}] #{msg}\n" }
+          end
+        end
+    end
+
+    def verbose
+      @verbose.nil? || @verbose
+    end
+
     def access(url, from: nil)
       host = URI.parse(url).host
-      main_title, chapters = NovelScraping.const_get(module_name[host]).get_site(url)
+      scraper = NovelScraping.const_get(module_name[host])
+      logger.info("Start scraping with #{scraper}") if verbose
+      main_title, chapters = scraper.get_site(url)
+      logger.info("Found #{chapters.size} chapters in \"#{main_title}\"") if verbose
       if from
         from = Time.parse(from) if from.instance_of?(String)
         chapters = chapters.select { |chapter| from <= chapter[:edit_at] }
+        logger.info("Filtered to #{chapters.size} chapters") if verbose
       end
-      chapters.each do |chapter|
-        chapter[:content] = NovelScraping.const_get(module_name[host]).get_chapter(chapter[:url])
+      chapters.each.with_index(1) do |chapter, index|
+        logger.info("Fetching chapter (#{index}/#{chapters.size}): #{chapter[:sub_title]}") if verbose
+        chapter[:content] = scraper.get_chapter(chapter[:url])
       end
+      logger.info('Scraping completed') if verbose
       [main_title, chapters]
     end
   end

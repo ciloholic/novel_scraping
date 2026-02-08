@@ -18,6 +18,7 @@ module NovelScraping
 
     def uri_open(url, option = {})
       random_sleep
+      logger.info("GET #{url}") if verbose
       res = Faraday.get(url) do |req|
         req.headers['User-Agent'] = Faker::Internet.user_agent
         req.headers['Cookie'] = option[:cookie] if option.key?(:cookie)
