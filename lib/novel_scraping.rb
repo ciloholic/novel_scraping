@@ -14,13 +14,10 @@ module NovelScraping
     attr_writer :logger, :verbose
 
     def logger
+      formatter = proc { |_severity, datetime, _progname, msg| "[#{datetime.strftime('%Y-%m-%d %H:%M:%S')}] #{msg}\n" }
       @logger ||=
-        if defined?(Rails)
-          Rails.logger
-        else
-          ActiveSupport::Logger.new($stdout).tap do |log|
-            log.formatter = proc { |_severity, datetime, _progname, msg| "[#{datetime.strftime('%Y-%m-%d %H:%M:%S')}] #{msg}\n" }
-          end
+        (defined?(Rails) ? Rails.logger : ActiveSupport::Logger.new($stdout)).tap do |log|
+          log.formatter = formatter
         end
     end
 

@@ -9,12 +9,13 @@ RSpec.describe NovelScraping do
     end
 
     context 'without Rails' do
+      let(:output) { StringIO.new }
+
       it 'returns an ActiveSupport::Logger instance' do
         expect(described_class.logger).to be_a(ActiveSupport::Logger)
       end
 
       it 'uses a formatter that outputs timestamp and message' do
-        output = StringIO.new
         described_class.logger = ActiveSupport::Logger.new(output).tap do |log|
           log.formatter = described_class.logger.formatter
         end
@@ -24,7 +25,8 @@ RSpec.describe NovelScraping do
     end
 
     context 'with Rails' do
-      let(:rails_logger) { ActiveSupport::Logger.new(StringIO.new) }
+      let(:output) { StringIO.new }
+      let(:rails_logger) { ActiveSupport::Logger.new(output) }
 
       before do
         stub_const('Rails', Struct.new(:logger).new(rails_logger))
@@ -33,14 +35,10 @@ RSpec.describe NovelScraping do
       it 'returns Rails.logger' do
         expect(described_class.logger).to eq(rails_logger)
       end
-    end
 
-    context 'with custom logger' do
-      let(:custom_logger) { ActiveSupport::Logger.new(StringIO.new) }
-
-      it 'returns the custom logger' do
-        described_class.logger = custom_logger
-        expect(described_class.logger).to eq(custom_logger)
+      it 'uses a formatter that outputs timestamp and message' do
+        described_class.logger.info('test message')
+        expect(output.string).to match(/\A\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] test message\n\z/)
       end
     end
   end
