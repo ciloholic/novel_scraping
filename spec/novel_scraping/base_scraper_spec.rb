@@ -44,6 +44,24 @@ RSpec.describe NovelScraping::BaseScraper do
       content = test_scraper.get_chapter(url)
       expect(content).to eq 'line1line2line3'
     end
+
+    it 'passes referer to uri_open when specified' do
+      url = 'https://example.com/chapter/1'
+      referer = 'https://example.com/'
+      allow(NovelScraping).to receive(:uri_open).with(url, { referer: }).and_return(html_body)
+
+      content = test_scraper.get_chapter(url, referer:)
+      expect(content).to eq 'test content'
+    end
+
+    it 'passes cookie and referer to uri_open when both specified' do
+      url = 'https://example.com/chapter/1'
+      referer = 'https://example.com/'
+      allow(NovelScraping).to receive(:uri_open).with(url, { cookie: 'over18=yes', referer: }).and_return(html_body)
+
+      content = cookie_scraper.get_chapter(url, referer:)
+      expect(content).to eq 'test content'
+    end
   end
 
   describe '.request_options' do

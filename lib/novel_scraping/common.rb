@@ -24,10 +24,14 @@ module NovelScraping
         req.headers['Cookie'] = option[:cookie] if option.key?(:cookie)
         req.headers['Referer'] = option[:referer] if option.key?(:referer)
       end
-      raise "HTTP Request Failed: #{res.status}" unless res.success?
+      unless res.success?
+        logger.error("HTTP Request Failed: #{res.status} #{url}") if verbose
+        raise "HTTP Request Failed: #{res.status}"
+      end
 
       res.body
     rescue Faraday::Error => e
+      logger.error("Faraday Error: #{e.message} #{url}") if verbose
       raise "Faraday Error: #{e.message}"
     end
 

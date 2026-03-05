@@ -126,6 +126,14 @@ RSpec.describe NovelScraping do
       expect(content).to eq '<p id="0">hameln chapter-1 content</p>'
     end
 
+    it 'NovelScraping::Hameln.get_chapter test with referer' do
+      url = 'https://syosetu.org/novel/000000/1.html'
+      referer = 'https://syosetu.org/novel/000000/'
+      allow(described_class).to receive(:uri_open).and_return(hameln[:html_chapter1]).with(url, { cookie: 'over18=off', referer: })
+      content = NovelScraping::Hameln.get_chapter(url, referer:)
+      expect(content).to eq '<p id="0">hameln chapter-1 content</p>'
+    end
+
     it 'NovelScraping::Hameln.datetime test' do
       expect(NovelScraping::Hameln.send(:datetime)).to be_nil
       expect(NovelScraping::Hameln.send(:datetime, '')).to be_nil
