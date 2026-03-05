@@ -12,7 +12,7 @@ module NovelScraping
   }.freeze
 
   class << self
-    def random_sleep(min: 1, max: 4)
+    def random_sleep(min: 3, max: 10)
       sleep(rand(min..max))
     end
 
@@ -22,6 +22,7 @@ module NovelScraping
       res = Faraday.get(url) do |req|
         req.headers['User-Agent'] = Faker::Internet.user_agent
         req.headers['Cookie'] = option[:cookie] if option.key?(:cookie)
+        req.headers['Referer'] = option[:referer] if option.key?(:referer)
       end
       raise "HTTP Request Failed: #{res.status}" unless res.success?
 

@@ -36,9 +36,11 @@ module NovelScraping
         chapters = chapters.select { |chapter| from <= chapter[:edit_at] }
         logger.info("Filtered to #{chapters.size} chapters") if verbose
       end
+      prev_url = url
       chapters.each.with_index(1) do |chapter, index|
         logger.info("Fetching chapter (#{index}/#{chapters.size}): #{chapter[:sub_title]}") if verbose
-        chapter[:content] = scraper.get_chapter(chapter[:url])
+        chapter[:content] = scraper.get_chapter(chapter[:url], referer: prev_url)
+        prev_url = chapter[:url]
       end
       logger.info('Scraping completed') if verbose
       [main_title, chapters]
