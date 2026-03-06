@@ -3,6 +3,15 @@
 require 'faraday'
 
 module NovelScraping
+  class HttpError < StandardError
+    attr_reader :status
+
+    def initialize(status)
+      @status = status
+      super("HTTP Request Failed: #{status}")
+    end
+  end
+
   MODULE_NAME_MAP = {
     'www.mai-net.net' => 'Arcadia',
     'ncode.syosetu.com' => 'Narou',
@@ -26,7 +35,7 @@ module NovelScraping
       end
       unless res.success?
         logger.error("HTTP Request Failed: #{res.status} #{url}") if verbose
-        raise "HTTP Request Failed: #{res.status}"
+        raise HttpError, res.status
       end
 
       res.body

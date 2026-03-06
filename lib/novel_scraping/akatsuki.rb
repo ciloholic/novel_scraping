@@ -19,7 +19,7 @@ module NovelScraping
 
     class << self
       def get_site(url)
-        html = Nokogiri::HTML(NovelScraping.uri_open(url, { user_agent: user_agent }))
+        html = Nokogiri::HTML(NovelScraping.uri_open(url, { user_agent: }))
         main_title = html.xpath(XML_MAIN_TITLE).text.strip
 
         chapters = []

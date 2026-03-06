@@ -20,6 +20,9 @@ Lint/StructNewOverride:
 
 #################### Style ####################
 
+Style/HashSyntax:
+  EnforcedShorthandSyntax: always
+
 Style/Documentation:
   Enabled: false
 
