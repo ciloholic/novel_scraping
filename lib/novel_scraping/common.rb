@@ -12,7 +12,7 @@ module NovelScraping
   }.freeze
 
   class << self
-    def random_sleep(min: 3, max: 10)
+    def random_sleep(min: 3, max: 7)
       sleep(rand(min..max))
     end
 
@@ -20,7 +20,7 @@ module NovelScraping
       random_sleep
       logger.info("GET #{url}") if verbose
       res = Faraday.get(url) do |req|
-        req.headers['User-Agent'] = Faker::Internet.user_agent
+        req.headers['User-Agent'] = option[:user_agent] || Faker::Internet.user_agent
         req.headers['Cookie'] = option[:cookie] if option.key?(:cookie)
         req.headers['Referer'] = option[:referer] if option.key?(:referer)
       end

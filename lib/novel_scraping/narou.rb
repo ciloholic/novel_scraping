@@ -20,14 +20,14 @@ module NovelScraping
 
     class << self
       def get_site(url)
-        top_html = Nokogiri::HTML(NovelScraping.uri_open(url))
+        top_html = Nokogiri::HTML(NovelScraping.uri_open(url, { user_agent: user_agent }))
         main_title = top_html.xpath(XML_MAIN_TITLE).text.strip
         htmls = [top_html].tap do |html|
           path = top_html.xpath(XML_PAGINATION)&.first&.value
           if path.present?
             last_page = URI.decode_www_form(URI.parse(path).query).to_h['p'].to_i
             [*2..last_page].each do |page|
-              html << Nokogiri::HTML(NovelScraping.uri_open("#{url}/?p=#{page}"))
+              html << Nokogiri::HTML(NovelScraping.uri_open("#{url}/?p=#{page}", { user_agent: user_agent }))
             end
           end
         end
