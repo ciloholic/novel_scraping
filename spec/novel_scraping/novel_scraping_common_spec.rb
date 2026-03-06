@@ -49,9 +49,9 @@ RSpec.describe NovelScraping do
       end
 
       it 'raises an HttpError with status attribute' do
-        described_class.uri_open(url)
-      rescue NovelScraping::HttpError => e
-        expect(e.status).to eq(403)
+        expect { described_class.uri_open(url) }.to raise_error(NovelScraping::HttpError) do |e|
+          expect(e.status).to eq(403)
+        end
       end
     end
   end

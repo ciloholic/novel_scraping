@@ -27,7 +27,7 @@ module NovelScraping
           path = top_html.xpath(XML_PAGINATION)&.first&.value
           if path.present?
             last_page = URI.decode_www_form(URI.parse(path).query).to_h['p'].to_i
-            [*2..last_page].each do |page|
+            (2..last_page).each do |page|
               html << Nokogiri::HTML(NovelScraping.uri_open("#{url}/?p=#{page}", { cookie: 'over18=yes', user_agent: }))
             rescue NovelScraping::HttpError
               break
