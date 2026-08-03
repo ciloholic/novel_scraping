@@ -12,12 +12,11 @@ require 'uri'
 module NovelScraping
   class Hameln < BaseScraper
     XML_MAIN_TITLE = '//*[@id="maind"]/div[1]/span[1]'
-    XML_SUB_TITLE = 'td[1]/a'
-    XML_CHAPTER_LIST = '//*[@id="maind"]/div[3]/table/tr'
-    XML_CHAPTER_LINK = 'td[1]/a/@href'
-    XML_POST_AT1 = 'td[2]/nobr/text()'
-    XML_POST_AT2 = 'td[2]/nobr/time/text()'
-    XML_EDIT_AT = 'td[2]/nobr/span/@title'
+    XML_SUB_TITLE = 'a/span[@class="episode-list__title"]'
+    XML_CHAPTER_LIST = '//*[@id="maind"]//section[@class="episode-list"]//li[@class="episode-list__item"]'
+    XML_CHAPTER_LINK = 'a/@href'
+    XML_POST_AT = 'a/time[@class="episode-list__date"]/text()'
+    XML_EDIT_AT = 'a/span[@class="episode-list__revision"]/@title'
     XML_CONTENT = '//*[@id="honbun"]'
 
     class << self
@@ -31,9 +30,8 @@ module NovelScraping
           next if sub_title.empty?
 
           chapter_link = URI.join(url, chapter.xpath(XML_CHAPTER_LINK).text)
-          post_at = datetime(chapter.xpath(XML_POST_AT1).text.gsub(/\(.\)/, ''))
-          post_at = datetime(chapter.xpath(XML_POST_AT2).text.gsub(/\(.\)/, '')) unless post_at.present?
-          edit_at = datetime(chapter.xpath(XML_EDIT_AT).text.gsub(/\(.\)/, ''))
+          post_at = datetime(chapter.xpath(XML_POST_AT).text)
+          edit_at = datetime(chapter.xpath(XML_EDIT_AT).text)
           chapters << {
             url: chapter_link.to_s,
             sub_title:,
@@ -53,7 +51,7 @@ module NovelScraping
       end
 
       def datetime(string = nil)
-        DateTimeParser.parse(string, :japanese_space)
+        DateTimeParser.parse(string, :slash_format)
       end
     end
   end

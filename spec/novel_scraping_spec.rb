@@ -145,7 +145,7 @@ RSpec.describe NovelScraping do
     it 'NovelScraping::Hameln.datetime test' do
       expect(NovelScraping::Hameln.send(:datetime)).to be_nil
       expect(NovelScraping::Hameln.send(:datetime, '')).to be_nil
-      expect(NovelScraping::Hameln.send(:datetime, '2020年01月01日 00:00')).to eq Time.strptime('2020年01月01日 00:00', '%Y年%m月%d日 %H:%M')
+      expect(NovelScraping::Hameln.send(:datetime, '2020/01/01 00:00')).to eq Time.parse('2020/01/01 00:00')
     end
   end
 

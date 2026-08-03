@@ -30,17 +30,6 @@ RSpec.describe NovelScraping::DateTimeParser do
       end
     end
 
-    context ':japanese_space (for Hameln)' do
-      it 'parses YYYY年MM月DD日 HH:MM format' do
-        result = described_class.parse('2020年01月01日 00:00', :japanese_space)
-        expect(result).to eq Time.strptime('2020年01月01日 00:00', '%Y年%m月%d日 %H:%M')
-      end
-
-      it 'returns nil for invalid format' do
-        expect(described_class.parse('2020/01/01 00:00', :japanese_space)).to be_nil
-      end
-    end
-
     context ':japanese_full (for Akatsuki)' do
       it 'parses YYYY年MM月DD日HH時MM分 format' do
         result = described_class.parse('2020年01月01日00時00分', :japanese_full)

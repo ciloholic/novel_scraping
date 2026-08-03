@@ -5,17 +5,12 @@ require 'time'
 module NovelScraping
   module DateTimeParser
     # Supported formats:
-    # - :slash_format   - for Narou/Nocturne/Arcadia (YYYY/MM/DD HH:MM)
-    # - :japanese_space - for Hameln (YYYY年MM月DD日 HH:MM)
+    # - :slash_format   - for Narou/Nocturne/Arcadia/Hameln (YYYY/MM/DD HH:MM)
     # - :japanese_full  - for Akatsuki (YYYY年MM月DD日HH時MM分)
     FORMATS = {
       slash_format: {
         pattern: %r{(\d{4}/\d{2}/\d{2} \d{2}:\d{2})},
         parser: ->(str) { Time.parse(str) }
-      },
-      japanese_space: {
-        pattern: nil,
-        parser: ->(str) { Time.strptime(str, '%Y年%m月%d日 %H:%M') }
       },
       japanese_full: {
         pattern: nil,
