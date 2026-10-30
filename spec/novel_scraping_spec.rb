@@ -77,6 +77,16 @@ RSpec.describe NovelScraping do
       expect(chapters).to eq arcadia[:chapters]
     end
 
+    it 'NovelScraping::Arcadia.get_site test with tbody' do
+      # HTML fetched through a browser has tbody inserted into tables
+      url = 'http://www.mai-net.net/bbs/sst/sst.php?act=dump&cate=akamatu&all=00000&n=0#kiji'
+      html_top = File.read('./spec/fixtures/arcadia/arcadia_tbody.html')
+      allow(described_class).to receive(:uri_open).and_return(html_top).with(url, { user_agent: test_ua })
+      main_title, chapters = NovelScraping::Arcadia.get_site(url)
+      expect(main_title).to eq arcadia[:main_title]
+      expect(chapters).to eq arcadia[:chapters]
+    end
+
     it 'NovelScraping::Arcadia.get_chapter test' do
       url = 'http://www.mai-net.net/bbs/sst/sst.php?act=dump&cate=akamatu&all=00000&n=1#kiji'
       allow(described_class).to receive(:uri_open).and_return(arcadia[:html_chapter1]).with(url, { user_agent: test_ua })
