@@ -4,6 +4,8 @@ require 'bundler/setup'
 require 'active_support/all'
 require 'novel_scraping'
 
+Encoding.default_external = Encoding::UTF_8
+
 RSpec.configure do |config|
   config.example_status_persistence_file_path = '.rspec_status'
   config.disable_monkey_patching!
