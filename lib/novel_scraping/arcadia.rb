@@ -10,9 +10,10 @@ require 'uri'
 
 module NovelScraping
   class Arcadia < BaseScraper
-    XML_MAIN_TITLE = '//*[@id="table"]/tr[1]/td[2]/b/a'
+    # Match rows with or without tbody, since browsers insert tbody into tables
+    XML_CHAPTER_LIST = '//*[@id="table"]/tr | //*[@id="table"]/tbody/tr'
+    XML_MAIN_TITLE = "(#{XML_CHAPTER_LIST})[1]/td[2]/b/a".freeze
     XML_SUB_TITLE = 'td[2]/b/a'
-    XML_CHAPTER_LIST = '//*[@id="table"]/tr'
     XML_CHAPTER_LINK = 'td[2]/b/a/@href'
     XML_POST_AT = 'td[4]'
     XML_EDIT_AT = 'td[4]'
