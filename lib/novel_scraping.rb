@@ -12,6 +12,7 @@ require 'novel_scraping/nocturne'
 module NovelScraping
   class << self
     attr_writer :logger, :verbose
+    attr_accessor :cdp_url
 
     def logger
       formatter = proc { |_severity, datetime, _progname, msg| "[#{datetime.strftime('%Y-%m-%d %H:%M:%S')}] #{msg}\n" }
