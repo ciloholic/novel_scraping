@@ -84,13 +84,18 @@ RSpec.describe NovelScraping do
     let(:network) { instance_double(Ferrum::Network, status:) }
     let(:cookies) { instance_double(Ferrum::Cookies, set: true) }
     let(:page) { instance_double(Ferrum::Page, go_to: nil, body: '<html>cdp</html>', close: nil, network:, cookies:) }
-    let(:browser) { instance_double(Ferrum::Browser, create_page: page, quit: nil) }
+    let(:target) { instance_double(Ferrum::Target, page:) }
+    let(:context) { instance_double(Ferrum::Context, targets: { 'TARGET_ID' => target }) }
+    let(:browser) { instance_double(Ferrum::Browser, default_context: context, command: nil, quit: nil) }
 
     before do
       allow(described_class).to receive(:random_sleep)
       allow(described_class).to receive(:logger).and_return(mock_logger)
       described_class.cdp_url = cdp_url
       allow(Ferrum::Browser).to receive(:new).and_return(browser)
+      allow(browser).to receive(:command)
+        .with('Target.createTarget', url: 'about:blank', background: true)
+        .and_return('targetId' => 'TARGET_ID')
       allow(Faraday).to receive(:get)
     end
 
@@ -101,9 +106,37 @@ RSpec.describe NovelScraping do
       expect(Ferrum::Browser).to have_received(:new).with(hash_including(url: cdp_url))
     end
 
-    it 'opens a new tab and returns the page body' do
+    it 'waits longer than the Ferrum default timeout of 5 seconds' do
+      described_class.uri_open(url)
+      expect(Ferrum::Browser).to have_received(:new).with(hash_including(timeout: 30))
+    end
+
+    context 'when cdp_url uses a hostname such as host.docker.internal' do
+      let(:cdp_url) { 'http://host.docker.internal:9222' }
+
+      before { allow(Resolv).to receive(:getaddress).with('host.docker.internal').and_return('192.168.65.254') }
+
+      it 'connects with the resolved IP address because Chrome rejects Host headers other than IP addresses and localhost' do
+        described_class.uri_open(url)
+        expect(Ferrum::Browser).to have_received(:new).with(hash_including(url: 'http://192.168.65.254:9222'))
+      end
+    end
+
+    context 'when cdp_url uses localhost' do
+      let(:cdp_url) { 'http://localhost:9222' }
+
+      before { allow(Resolv).to receive(:getaddress) }
+
+      it 'connects with cdp_url as it is' do
+        described_class.uri_open(url)
+        expect(Ferrum::Browser).to have_received(:new).with(hash_including(url: cdp_url))
+        expect(Resolv).not_to have_received(:getaddress)
+      end
+    end
+
+    it 'opens a new tab in the background and returns the page body' do
       expect(described_class.uri_open(url)).to eq('<html>cdp</html>')
-      expect(browser).to have_received(:create_page)
+      expect(browser).to have_received(:command).with('Target.createTarget', url: 'about:blank', background: true)
       expect(page).to have_received(:go_to).with(url)
     end
 
@@ -130,7 +163,6 @@ RSpec.describe NovelScraping do
     end
 
     it 'ignores the user_agent and referer options to keep the browser defaults' do
-      # headers is not stubbed on the instance_double, so any attempt to change headers fails
       expect(described_class.uri_open(url, { user_agent: 'TestAgent/1.0', referer: 'https://example.com/' })).to eq('<html>cdp</html>')
     end
 
@@ -177,6 +209,44 @@ RSpec.describe NovelScraping do
           nil
         end
         expect(page).to have_received(:close)
+        expect(browser).to have_received(:quit)
+      end
+    end
+
+    context 'when connecting to the new tab fails' do
+      before { allow(target).to receive(:page).and_raise(Ferrum::TimeoutError) }
+
+      it 'raises a RuntimeError like the Faraday version' do
+        expect { described_class.uri_open(url) }.to raise_error(RuntimeError, /\AFerrum Error: /)
+      end
+
+      it 'closes the tab by its target id and disconnects from Chrome' do
+        begin
+          described_class.uri_open(url)
+        rescue RuntimeError
+          nil
+        end
+        expect(browser).to have_received(:command).with('Target.closeTarget', targetId: 'TARGET_ID')
+        expect(browser).to have_received(:quit)
+      end
+    end
+
+    context 'when the new tab is not registered in time' do
+      let(:context) { instance_double(Ferrum::Context, targets: {}) }
+
+      before { stub_const('NovelScraping::CDP_TIMEOUT', 0) }
+
+      it 'raises a RuntimeError like the Faraday version' do
+        expect { described_class.uri_open(url) }.to raise_error(RuntimeError, /\AFerrum Error: /)
+      end
+
+      it 'closes the tab by its target id and disconnects from Chrome' do
+        begin
+          described_class.uri_open(url)
+        rescue RuntimeError
+          nil
+        end
+        expect(browser).to have_received(:command).with('Target.closeTarget', targetId: 'TARGET_ID')
         expect(browser).to have_received(:quit)
       end
     end

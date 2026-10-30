@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'active_support'
+require 'active_support/core_ext/object/blank'
 require 'active_support/time'
 require 'faker'
 require 'nokogiri'
@@ -10,7 +11,7 @@ require 'uri'
 
 module NovelScraping
   class Arcadia < BaseScraper
-    # Match rows with or without tbody, since browsers insert tbody into tables
+    # Browsers insert tbody into tables
     XML_CHAPTER_LIST = '//*[@id="table"]/tr | //*[@id="table"]/tbody/tr'
     XML_MAIN_TITLE = "(#{XML_CHAPTER_LIST})[1]/td[2]/b/a".freeze
     XML_SUB_TITLE = 'td[2]/b/a'

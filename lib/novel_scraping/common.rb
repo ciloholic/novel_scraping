@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'faraday'
+require 'resolv'
+require 'uri'
 
 module NovelScraping
   class HttpError < StandardError
@@ -19,6 +21,9 @@ module NovelScraping
     'www.akatsuki-novels.com' => 'Akatsuki',
     'novel18.syosetu.com' => 'Nocturne'
   }.freeze
+
+  CDP_TIMEOUT = 30
+  IP_ADDRESS_REGEXP = /\A#{Resolv::AddressRegex}\z/
 
   class << self
     def random_sleep(min: 3, max: 7)
@@ -51,14 +56,13 @@ module NovelScraping
       raise "Faraday Error: #{e.message}"
     end
 
-    # Fetch the page through a running Chrome connected via CDP.
-    # User-Agent and Referer are not overridden so that the browser's own values are used.
     def fetch_with_cdp(url, option)
       require 'ferrum'
 
-      browser = Ferrum::Browser.new(url: cdp_url)
+      browser = Ferrum::Browser.new(url: cdp_endpoint, timeout: CDP_TIMEOUT)
       begin
-        page = browser.create_page
+        target_id = browser.command('Target.createTarget', url: 'about:blank', background: true)['targetId']
+        page = wait_for_cdp_target(browser.default_context, target_id).page
         set_cdp_cookie(page, url, option[:cookie]) if option.key?(:cookie)
         page.go_to(url)
         status = page.network.status
@@ -66,12 +70,39 @@ module NovelScraping
 
         page.body
       ensure
-        page&.close
+        close_cdp_tab(browser, target_id, page)
         browser.quit
       end
     rescue Ferrum::Error => e
       logger.error("Ferrum Error: #{e.message} #{url}") if verbose
       raise "Ferrum Error: #{e.message}"
+    end
+
+    def wait_for_cdp_target(context, target_id)
+      deadline = Time.now + CDP_TIMEOUT
+      until (target = context.targets[target_id])
+        raise Ferrum::TimeoutError if Time.now >= deadline
+
+        sleep 0.1
+      end
+      target
+    end
+
+    def close_cdp_tab(browser, target_id, page)
+      if page
+        page.close
+      elsif target_id
+        browser.command('Target.closeTarget', targetId: target_id)
+      end
+    end
+
+    # Chrome rejects DevTools requests whose Host header is neither an IP address nor localhost
+    def cdp_endpoint
+      uri = URI.parse(cdp_url)
+      return cdp_url if uri.hostname == 'localhost' || uri.hostname.match?(IP_ADDRESS_REGEXP)
+
+      uri.hostname = Resolv.getaddress(uri.hostname)
+      uri.to_s
     end
 
     def set_cdp_cookie(page, url, cookie)
